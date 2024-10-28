@@ -1,9 +1,7 @@
-
-let chars = []; 
-
+let chars = [];
 let grid;
 let cols, rows;
-let resolution = 10;  
+let resolution = 10;
 let noiseOffsetX, noiseOffsetY;
 let revealedCells = new Set();
 let toRevealCells = [];
@@ -19,89 +17,98 @@ let r = 255;
 let g = 255;
 let b = 255;
 
-function setup() {
+document.addEventListener('modelReady', () => {
+  if (window.ready) {
+    // console.log('sentiment: ', window.sentiment);
+    // console.log('score: ', window.score);
+    // console.log('number of swear words: ', window.numberOfSwearWords);
+    // console.log('number of capital letters: ', window.numberOfCapitalLetters);
+    // console.log('number of full capitalised words: ', window.numberOfFullCapitalisedWords);
+    // console.log('number of words: ', window.totalNumOfWords);
+    // console.log('dictionary for characters and their counts: ', window.charCountDict);
+    // console.log('dictionary for punctuation and their counts: ', window.punctuationDict);
+    // console.log('the most repeated character(s) and their counts: ', window.mostRepeatedCharacters, window.longestRepeatCounter);
+    // console.log('window.chars: ', window.chars);
+    // console.log(window.chars);
+    
+    chars= window.chars;
+    console.log(chars);
+    drawShape();
+  }
+});
 
+
+function setup() {
+  console.log('setup');
   createCanvas(windowWidth, windowHeight);
-  textSize(resolution);  
-  textAlign(CENTER, CENTER);  
+  textSize(resolution);
+  textAlign(CENTER, CENTER);
+
   cols = floor(width / resolution);
   rows = floor(height / resolution);
-  grid = make2DArray(cols, rows);
-  
-  nameField = createInput('')
-  nameField.id('text_input')
-  nameField.attribute('placeholder', 'Your Message')
-  nameField.position((windowWidth/2 - 250), windowHeight/2 + 200)
-  nameField.size(500)
-  
-  // Populate ASCII characters from 32 to 126
-  //for (let i = 32; i < 127; i++) {
-    //chars.push(String.fromCharCode(i));
-  //}
-  
-  chars.push();
 
+  grid = make2DArray(cols, rows);
   noiseOffsetX = random(1000);
   noiseOffsetY = random(1000);
-
-  generatePattern();
-  shiftPatternToCenter();
-  mirrorPattern();
 }
 
 function draw() {
   background(0);
-  
   textFont('Garamond');
   textSize(9);
   textStyle(BOLD);
-  fill (r, g, b);
-  
-  // Calculate the offset to center the grid
-  let offsetX = (width - (cols * resolution)) / 2;
-  let offsetY = (height - (rows * resolution)) / 2;
+  fill(r, g, b);
 
-  // Draw revealed cells with ASCII characters
-  for (let key of revealedCells.keys()) {
-    let [i, j] = key.split(",").map(Number);
-    drawAscii(i, j, offsetX, offsetY);
-  }
+  if (window.ready) {
 
-  if (revealedCells.size === 0) {
-    let centerX = floor(cols / 2);
-    let centerY = floor(rows / 2);
-    toRevealCells.push([centerX, centerY]);
-  }
+    console.log('drawing');
+    
+    let offsetX = (width - (cols * resolution)) / 2;
+    let offsetY = (height - (rows * resolution)) / 2;
 
-  let newToReveal = [];
-  for (let [i, j] of toRevealCells) {
-    if (!revealedCells.has(`${i},${j}`) && grid[i][j] == 1) {
+    // // Draw revealed cells with ASCII characters
+    for (let key of revealedCells.keys()) {
+      let [i, j] = key.split(",").map(Number);
       drawAscii(i, j, offsetX, offsetY);
-      revealedCells.add(`${i},${j}`);
+    }
 
-      let neighbors = [];
-      for (let dx = -4; dx <= 4; dx++) {
-        for (let dy = -4; dy <= 4; dy++) {
-          let ni = i + dx;
-          let nj = j + dy;
-          if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
-            if (!revealedCells.has(`${ni},${nj}`) && grid[ni][nj] == 1) {
-              neighbors.push([ni, nj]);
+    if (revealedCells.size === 0) {
+      let centerX = floor(cols / 2);
+      let centerY = floor(rows / 2);
+      toRevealCells.push([centerX, centerY]);
+    }
+
+    let newToReveal = [];
+
+    for (let [i, j] of toRevealCells) {
+      if (!revealedCells.has(`${i},${j}`) && grid[i][j] == 1) {
+        drawAscii(i, j, offsetX, offsetY);
+        revealedCells.add(`${i},${j}`);
+
+        let neighbors = [];
+        for (let dx = -4; dx <= 4; dx++) {
+          for (let dy = -4; dy <= 4; dy++) {
+            let ni = i + dx;
+            let nj = j + dy;
+            if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
+              if (!revealedCells.has(`${ni},${nj}`) && grid[ni][nj] == 1) {
+                neighbors.push([ni, nj]);
+              }
             }
           }
         }
+        shuffleArray(neighbors);
+        let numToAdd = floor(random(1, neighbors.length + 1));
+        newToReveal.push(...neighbors.slice(0, numToAdd));
       }
-      shuffleArray(neighbors);
-      let numToAdd = floor(random(1, neighbors.length + 1));
-      newToReveal.push(...neighbors.slice(0, numToAdd));
+    }
+    toRevealCells = [...newToReveal];
+
+    if (toRevealCells.length == 0) {
+      noLoop();
     }
   }
 
-  toRevealCells = [...new Set(newToReveal)];
-
-  if (toRevealCells.length == 0) {
-    noLoop();
-  }
 }
 
 function generatePattern() {
@@ -122,9 +129,12 @@ function generatePattern() {
       grid[i][j] = combinedValue > inkThreshold ? 1 : 0;
     }
   }
+
+
 }
 
 function shiftPatternToCenter() {
+
   let maxDistFromCenter = 0;
   for (let i = 0; i < cols / 2; i++) {
     for (let j = 0; j < rows; j++) {
@@ -134,7 +144,6 @@ function shiftPatternToCenter() {
       }
     }
   }
-
   let shiftAmount = floor(cols / 2 - maxDistFromCenter) - overlapAmount;
 
   for (let i = cols / 2 - 1; i >= 0; i--) {
@@ -160,7 +169,7 @@ function mirrorPattern() {
 
 function drawAscii(i, j, offsetX, offsetY) {
   let charIndex = floor(random(chars.length));  // Random character from populated ASCII
-  let asciiChar = grid[i][j] == 1 ? chars[charIndex] : ' '; 
+  let asciiChar = grid[i][j] == 1 ? chars[charIndex] : ' ';
   text(asciiChar, i * resolution + offsetX + resolution / 2, j * resolution + offsetY + resolution / 2);
 }
 
@@ -184,43 +193,39 @@ function keyPressed() {
     drawShape();
   } else if (key === "f") {
     enterFullscreen();
-  } else if (keyIsDown(49)){
+  } else if (keyIsDown(49)) {
     r = 161;
     g = 0;
     b = 14;
-    
+
     drawShape();
-  } else if (keyIsDown(50)){
+  } else if (keyIsDown(50)) {
     r = 1;
     g = 115;
     b = 92;
-    
+
     drawShape();
-  } else if (keyIsDown(51)){
+  } else if (keyIsDown(51)) {
     r = 104;
     g = 71;
     b = 141;
-    
+
     drawShape();
-  } else if (keyIsDown(13)){
-    
-    let characters = nameField.value();
-    chars = ([...characters].filter(x => x!== ''));
-    
-    chars = [... new Set(chars)];
+  } else if (keyIsDown(13)) {
+    // 
   }
 }
 
-function drawShape(){
-  revealedCells.clear();  
-    toRevealCells = [];     
-    grid = make2DArray(cols, rows);  
-    noiseOffsetX = random(1000); 
-    noiseOffsetY = random(1000);
-    generatePattern();  
-    shiftPatternToCenter(); 
-    mirrorPattern(); 
-    loop();  
+function drawShape() {
+  revealedCells.clear();
+  toRevealCells = [];
+  grid = make2DArray(cols, rows);
+  noiseOffsetX = random(1000);
+  noiseOffsetY = random(1000);
+  generatePattern();
+  shiftPatternToCenter();
+  mirrorPattern();
+  loop();
 }
 
 function enterFullscreen() {
@@ -231,10 +236,5 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   cols = floor(width / resolution);  // Recalculate cols on resize
   rows = floor(height / resolution);  // Recalculate rows on resize
-  grid = make2DArray(cols, rows);     // Reset the grid
-  noiseOffsetX = random(1000);        // Re-randomize noise offsets
-  noiseOffsetY = random(1000);
-  generatePattern();                   // Regenerate the pattern
-  shiftPatternToCenter();              // Shift the pattern
-  mirrorPattern();                     // Mirror the pattern
+  drawShape(); 
 }
