@@ -1,0 +1,8 @@
+This is a generative art project created by Jewel and Kieran as part of our final module. Our aim is to explore the theme of instant gratification—a concept that has become more prevalent in today's fast-paced, connected world. With the rise of technologies like 5G and Wi-Fi, along with platforms like TikTok that prioritize quick, bite-sized content, we’ve grown accustomed to immediate responses and instant access. This phenomenon of fast-paced consumption is at the heart of our project.
+
+To investigate this, we designed an experiment using a survey that intentionally slows down the interaction process. As users answer questions, they experience delayed loading times, with the speed of the responses becoming progressively slower. We wanted to explore how this delay impacts their emotional reactions—particularly whether frustration builds up over time, reflected in the way they type their answers.
+
+Translating this into art:
+To transform this experience into visual art, we employed text processing techniques such as sentiment analysis and counted the number of capitalized words in the responses. Our inspiration also came from the Rorschach test—a projective psychological test in which subjects' interpretations of inkblot images are analyzed. Psychologists often use this test to delve into a person's personality and emotional state. We used the Rorschach test as a conceptual framework for our artwork, combining it with complex algorithms to form the base structure of our generative piece.
+
+The artwork you see is a product of these ideas and analyses, and can be revealed when you press Enter!

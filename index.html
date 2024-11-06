@@ -1,20 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/addons/p5.sound.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@latest/dist/transformers.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <meta charset="utf-8" />
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/addons/p5.sound.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@latest/dist/transformers.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  </head>
-  <body>
-    <main>
-      <input id="input_field" type="text"  name="input_field">
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="utf-8" />
+
+</head>
+
+<body>
+  <main>
+    <div id="intro-modal" class="modal">
+      <div class="modal-content">
+        <p id="intro-text">
+          Welcome to our Space!
+          This is a generative art project created by Jewel and Kieran. Our aim is to
+          explore the theme of instant gratification — a concept that has become more prevalent in today's fast-paced,
+          connected world. With the rise of technologies like 5G and Wi-Fi, along with platforms like TikTok that
+          prioritize quick, bite-sized content, we’ve grown accustomed to immediate responses and instant access. This
+          phenomenon of fast-paced consumption is at the heart of our project.
+
+          To investigate this, we designed an experiment using a survey that intentionally slows down the interaction
+          process. As users answer questions, they experience delayed loading times, with the speed of the responses
+          becoming progressively slower. We wanted to explore how this delay impacts their emotional
+          reactions — particularly whether frustration builds up over time, reflected in the way they type their answers.
+
+          To transform this experience into visual art, we employed text processing techniques such as sentiment
+          analysis (using an open source pretrained model from Huggingface), counted the number of capitalized words in the responses and many more.
+          Our inspiration also came from the
+          Rorschach test — a projective psychological test in which subjects' interpretations of inkblot images are
+          analyzed. Psychologists often use this test to delve into a person's personality and emotional state. We used
+          the Rorschach test as a conceptual framework for our artwork, combining it with algorithms to form the
+          base structure of our generative piece.
+
+          The artwork you see is a product of these ideas and analyses, and can be seen when you close this modal :)
+        </p>
+        <button id="close-modal-btn">Close</button>
+      </div>
+    </div>
+
+    <div id="movingCursor"></div>
+    <script src="cursor.js"></script>
+
+    <div class="accordion" id="variablesAccordion">
+      <!-- Accordion Item -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+            aria-expanded="true" aria-controls="collapseOne">
+            Variables (Set<span id="CurrentSet"></span>
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+          data-bs-parent="#variablesAccordion">
+          <div class="accordion-body">
+            <ol id="variablesList">
+              <li><code>The question: "<span id="surveyQuestion"></span>"</code></li>
+              <li><code>The answer: "<span id="textValue"></span>"</code></li>
+              <li><code>The number of words: <span id="wordsCount"></span></code></li>
+              <li><code>The sentiment: <span id="sentimentValue"></span></code></li>
+              <li><code>The number of capital letters: <span id="capitalLettersCount"></span></code></li>
+              <li><code>Characters: <span id="charsValue"></span></code></li>
+              <li><code>Total number of words: <span id="totalWordsCount"></span></code></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="input-field-container">
       <p>Enter your text:</p>
-    </main>
-    <script src="/text_analysis.js" type="module"></script>
-    <script src="/sketch.js"></script>
-  </body>
+      <input id="input-field" type="text" name="input_field">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+        <path fill-rule="evenodd"
+          d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+      </svg>
+    </div>
+
+    <div id="key-controls">
+      <span>Key Controls:</span>
+      <div class="two-control"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-2-square-fill" viewBox="0 0 16 16">
+          <path
+            d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm4.646 6.24v.07H5.375v-.064c0-1.213.879-2.402 2.637-2.402 1.582 0 2.613.949 2.613 2.215 0 1.002-.6 1.667-1.287 2.43l-.096.107-1.974 2.22v.077h3.498V12H5.422v-.832l2.97-3.293c.434-.475.903-1.008.903-1.705 0-.744-.557-1.236-1.313-1.236-.843 0-1.336.615-1.336 1.306" />
+        </svg><span>&nbsp;(twice): try out our model</span></div>
+      <div class="three-control">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-3-square"
+          viewBox="0 0 16 16">
+          <path
+            d="M7.918 8.414h-.879V7.342h.838c.78 0 1.348-.522 1.342-1.237 0-.709-.563-1.195-1.348-1.195-.79 0-1.312.498-1.348 1.055H5.275c.036-1.137.95-2.115 2.625-2.121 1.594-.012 2.608.885 2.637 2.062.023 1.137-.885 1.776-1.482 1.875v.07c.703.07 1.71.64 1.734 1.917.024 1.459-1.277 2.396-2.93 2.396-1.705 0-2.707-.967-2.754-2.144H6.33c.059.597.68 1.06 1.541 1.066.973.006 1.6-.563 1.588-1.354-.006-.779-.621-1.318-1.541-1.318" />
+          <path
+            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+        </svg><span>&nbsp;: Restart gallery </span>
+      </div>
+      <div class="space-control">
+        <img src="./spacebar_icon.png"><span>&nbsp;: Random generation</span>
+      </div>
+    </div>
+    <div id="links">
+      <span>Links:</span>
+      <div class="github-link">
+        <a href="https://github.com/jewel-chin/generative-art" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+            viewBox="0 0 16 16">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+          </svg>
+          <span>&nbsp;: Our code repository</span>
+        </a>
+      </div>
+      <div class="survey-link">
+
+        <a href="https://jewel-chin.github.io/dm3008-experiment/" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-card-checklist" viewBox="0 0 16 16">
+            <path
+              d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
+            <path
+              d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0" />
+          </svg>
+          <span>&nbsp;: Our experimental survey</span>
+        </a>
+      </div>
+    </div>
+  </main>
+  <script src="text_analysis.js" type="module"></script>
+  <script src="sketch.js"></script>
+
+</body>
+
 </html>
