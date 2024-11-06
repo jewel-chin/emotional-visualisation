@@ -50,7 +50,7 @@ document.addEventListener('modelReady', () => {
     
     // chars= chars;
      // To keep track of which result we're currently processing
-    let i = window.results[currentIndex%window.results.length]; 
+    let i = window.results[currentIndex%7]; 
 
     currentSet = i[0]
     survey_question = i[1];
@@ -376,7 +376,7 @@ function keyPressed() {
   if(keyIsDown(51)){//3
     currentIndex=0;
     clearAllTimeouts();
-    let i = window.results[currentIndex%window.results.length]; 
+    let i = window.results[currentIndex%7]; 
     currentSet = i[0]
     survey_question = i[1];
     survey_string = i[2];
@@ -448,7 +448,7 @@ function drawShapeWithRotation() {
   if(interaction === false){
     drawingTimers.push(setTimeout(()=>{
       currentIndex++;
-      let i = window.results[currentIndex%window.results.length]; 
+      let i = window.results[currentIndex%7]; 
 
   
       currentSet = i[0];
@@ -483,7 +483,6 @@ function updateList(survey_question, text,totalNumOfWords,sentiment,numberOfCapi
   document.getElementById("CurrentSet").textContent = ' #'+currentSet+")";
   document.getElementById("surveyQuestion").textContent = survey_question; 
   document.getElementById("textValue").textContent = text; 
-  document.getElementById("wordsCount").textContent = totalNumOfWords;
   document.getElementById("sentimentValue").textContent = sentiment; 
   document.getElementById("capitalLettersCount").textContent = numberOfCapitalLetters; 
   document.getElementById("charsValue").textContent = chars; 
@@ -498,7 +497,7 @@ function enterFullscreen() {
 
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(width, height);
   cols = floor(width / resolution);  
   rows = floor(height / resolution); 
   drawShape(); 
@@ -519,7 +518,7 @@ function toggleTextField() {
     textField.style.display = 'none'; 
     interaction = false;
 
-    let i = window.results[currentIndex%window.results.length]; 
+    let i = window.results[currentIndex%7]; 
 
     survey_question = i[0];
     survey_string = i[1];
