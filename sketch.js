@@ -464,7 +464,7 @@ function drawShapeWithRotation() {
               clearTimeout(timers[i]);
         }
         drawShapeWithRotation();
-        updateList(survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+        updateList(currentSet,survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
   
       },1000));
     },4000));
@@ -527,7 +527,7 @@ function toggleTextField() {
     numberOfCapitalLetters = i[4];
     sentiment = i[3];
     totalNumOfWords = i[6];
-    updateList(survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
+    updateList(currentSet,survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
     drawShapeWithRotation();
   }
 }
