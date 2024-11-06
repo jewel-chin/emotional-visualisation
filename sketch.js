@@ -232,13 +232,13 @@ function updateNoiseLevels(sentiment) {
       noiseLevelX = 0.1;
       noiseLevelY = 0.1;
 
-      r1 = 243;        
-      g1 = 191;      
-      b1 = 197;        
+      r1 = 10;        
+      g1 = 250;      
+      b1 = 161;        
 
-      r2 = 254;      
-      g2 = 248;     
-      b2 = 239;       
+      r2 = 1;      
+      g2 = 130;     
+      b2 = 250;   
       break;
 
     case 'negative':
