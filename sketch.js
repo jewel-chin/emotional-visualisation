@@ -50,16 +50,16 @@ document.addEventListener('modelReady', () => {
     
     // chars= chars;
      // To keep track of which result we're currently processing
-    let i = window.results[currentIndex%7]; 
+    let i = window.results[currentIndex%window.results.length]; 
 
-    currentSet = i[0]
+    currentSet = i[0];
     survey_question = i[1];
     survey_string = i[2];
     chars = i[5];
     numberOfCapitalLetters = i[4];
     sentiment = i[3];
     totalNumOfWords = i[6];
-    updateList(survey_question, survey_string,  totalNumOfWords, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+    updateList(currentSet, survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
     drawShape();
     drawShapeWithRotation();
   }
@@ -75,7 +75,7 @@ document.addEventListener('interactionReady', () => {
     numberOfCapitalLetters = i[3];
     sentiment = i[2];
     totalNumOfWords = i[5];
-    updateList(survey_question, survey_string,  totalNumOfWords, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+    updateList("0",survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
     drawShape();
   }
 });
@@ -111,7 +111,7 @@ function draw() {
         noStroke();
         removeGlow();
 
-        let charset = ['waiting','for','your','text',"......","you're",'quite','slow',"don't",'you','think','?']
+        let charset = ['waiting','for','your','text',"......","you're",'quite','slow',"don't",'you','think','?'];
         for (let x = 0; x < elementsX + 1; x++) {
           for (let y = 0; y < elementsY; y++) {
             let posX = map(x, 0, elementsX, 0, width*2.5);
@@ -260,9 +260,7 @@ function updateNoiseLevels(sentiment) {
 
 
 function updateInkThreshold(totalNumOfWords) {
-    
   inkThreshold = map(totalNumOfWords, 1, 10, 0.95, 0.75);
-  
   inkThreshold = constrain(inkThreshold, 0.75, 0.95);
 }
 
@@ -366,7 +364,7 @@ function shuffle2DArray(array) {
 function keyPressed() {
   if (keyIsDown(32)) { // space
     clearAllTimeouts();
-    updateList("N.A", "N.A", "N.A", "N.A","N.A", "N.A", "N.A");
+    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A");
     drawShape();
   } 
 
@@ -376,15 +374,15 @@ function keyPressed() {
   if(keyIsDown(51)){//3
     currentIndex=0;
     clearAllTimeouts();
-    let i = window.results[currentIndex%7]; 
-    currentSet = i[0]
+    let i = window.results[currentIndex%window.results.length]; 
+    currentSet = i[0];
     survey_question = i[1];
     survey_string = i[2];
     chars = i[5];
     numberOfCapitalLetters = i[4];
     sentiment = i[3];
     totalNumOfWords = i[6];
-    updateList(survey_question, survey_string,  totalNumOfWords, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
+    updateList(currentSet, survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
     drawShapeWithRotation();
   } 
 }
@@ -448,7 +446,7 @@ function drawShapeWithRotation() {
   if(interaction === false){
     drawingTimers.push(setTimeout(()=>{
       currentIndex++;
-      let i = window.results[currentIndex%7]; 
+      let i = window.results[currentIndex%window.results.length]; 
 
   
       currentSet = i[0];
@@ -466,20 +464,20 @@ function drawShapeWithRotation() {
               clearTimeout(timers[i]);
         }
         drawShapeWithRotation();
-        updateList(survey_question, survey_string, totalNumOfWords, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+        updateList(survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
   
       },1000));
     },4000));
   }
   else{
-    updateList("N.A", "N.A", "N.A", "N.A","N.A", "N.A", "N.A");
+    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A");
   }
 
 
   
 }
 
-function updateList(survey_question, text,totalNumOfWords,sentiment,numberOfCapitalLetters,chars,totalNumOfWords) {
+function updateList(currentSet,survey_question, text,sentiment,numberOfCapitalLetters,chars,totalNumOfWords) {
   document.getElementById("CurrentSet").textContent = ' #'+currentSet+")";
   document.getElementById("surveyQuestion").textContent = survey_question; 
   document.getElementById("textValue").textContent = text; 
@@ -500,6 +498,7 @@ function windowResized() {
   resizeCanvas(width, height);
   cols = floor(width / resolution);  
   rows = floor(height / resolution); 
+  clearAllTimeouts();
   drawShape(); 
 }
   
@@ -509,24 +508,26 @@ function toggleTextField() {
 
   if (textField.style.display === 'none') {
     textField.style.display = 'block';
-
+    console.log('toggled');
     interaction = true;
     clearAllTimeouts();
-    updateList("N.A", "N.A", "N.A", "N.A","N.A", "N.A", "N.A");
+    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A");
 
   } else {
     textField.style.display = 'none'; 
     interaction = false;
+    
 
-    let i = window.results[currentIndex%7]; 
-
-    survey_question = i[0];
-    survey_string = i[1];
-    chars = i[4];
-    numberOfCapitalLetters = i[3];
-    sentiment = i[2];
-    totalNumOfWords = i[5];
-    updateList(survey_question, survey_string,  totalNumOfWords, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
+    clearAllTimeouts();
+    let i = window.results[currentIndex%window.results.length]; 
+    currentSet = i[0];
+    survey_question = i[1];
+    survey_string = i[2];
+    chars = i[5];
+    numberOfCapitalLetters = i[4];
+    sentiment = i[3];
+    totalNumOfWords = i[6];
+    updateList(survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
     drawShapeWithRotation();
   }
 }

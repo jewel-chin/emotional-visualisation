@@ -145,8 +145,6 @@ enterSVGElement.addEventListener("click",()=>{
     }
     else{
         window.interactionReady = false;
-        document.dispatchEvent(new Event('interactionReady'));
-
     }
 })
 textInput.addEventListener("keydown", (e)=>{
@@ -156,8 +154,6 @@ textInput.addEventListener("keydown", (e)=>{
         }
         else{
             window.interactionReady = false;
-            document.dispatchEvent(new Event('interactionReady'));
-
         }
     }
 });
