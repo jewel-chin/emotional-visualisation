@@ -204,7 +204,7 @@ function generatePattern() {
         i * noiseLevelX + noiseOffsetX,
         j * noiseLevelY + noiseOffsetY
       );
-      let combinedValue = gradient * (noiseValue + 0.65);
+      let combinedValue = gradient * (noiseValue + 0.55);
 
       grid[i][j] = combinedValue > inkThreshold ? 1 : 0;
     }
