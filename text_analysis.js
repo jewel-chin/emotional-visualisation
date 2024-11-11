@@ -610,9 +610,10 @@ window.onload = async function() {
             introTextElement.appendChild(document.createElement('br'));
             return;
         }
-        const emptyDiv =document.createElement('span');
+        const emptyDiv = document.createElement('span');
         emptyDiv.classList.add('space');
-        emptyDiv.innerHTML= ".....";
+        emptyDiv.innerHTML = ".....";
+        emptyDiv.style.display = 'block';  // This makes the span behave like a block element
         introTextElement.appendChild(emptyDiv);
         const chunks = chunkTextByWords(paragraph, 15);
         chunks.forEach(chunk => {
