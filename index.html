@@ -21,27 +21,34 @@
     <div id="intro-modal" class="modal">
       <div class="modal-content">
         <p id="intro-text">
-          Welcome to our Space!
-          This is a generative art project created by Jewel and Kieran. Our aim is to
-          explore the theme of instant gratification — a concept that has become more prevalent in today's fast-paced,
-          connected world. With the rise of technologies like 5G and Wi-Fi, along with platforms like TikTok that
-          prioritize quick, bite-sized content, we’ve grown accustomed to immediate responses and instant access. This
-          phenomenon of fast-paced consumption is at the heart of our project.
+          Welcome to our Space! (NEXT)
 
-          To investigate this, we designed an experiment using a survey that intentionally slows down the interaction
-          process. As users answer questions, they experience delayed loading times, with the speed of the responses
-          becoming progressively slower. We wanted to explore how this delay impacts their emotional
-          reactions — particularly whether frustration builds up over time, reflected in the way they type their answers.
+          This is a generative art project created by Jewel and Kieran. Our work offers introspection by invoking
+          emotional qualities through the transformation of messages into art. This machine allows participants to
+          witness how their emotions can manifest visually, offering a unique perspective into the latent weight that
+          words can carry. It captures subtle shifts in intensity and expression, transforming nuanced variables into a
+          visual narrative that reveals the embedded emotions within each message.
+          (NEXT)
+          To test our machine, we collected a range of messages with varied sentiments via a survey that takes
+          participants on an emotional journey from calm to frustration. As users answer questions, they experience
+          delayed loading times, with the speed of the responses becoming progressively slower. This gradual drag acts
+          as a psychological probe, testing the limits of patience and revealing how frustration begins to manifests in
+          their typing behaviour and tone.
+          (NEXT)
+          For the visual component, we employed text processing techniques such sentiment analysis and tracking the
+          number capitalisation words as frustration escalates. Our base visual is inspired by the iconic Rorschach
+          inkblots — a psychological tool that invites viewers to project their own emotions onto abstract forms. We
+          adapted this structure to reveal something deeper: each participant’s raw emotional data shapes the contours
+          and shades of a visual unique drawing. These dynamic visualisations serve as a mirror, presenting themselves
+          as a representation of a journey of calm to frustration, invoking introspection and a collection sense of
+          shared emotions.
+          (NEXT)
+          Since our project is generative, each participant’s data feeds into a system that continuously creates new
+          visuals, ensuring that no two are ever the same. This process reveals the fluidity of emotions and generates a
+          dynamic gallery of expressive, data-driven visuals.
+          (NEXT)
+          The gallery you see is a product of the data we have gathered, and can be seen when you close this modal :)
 
-          To transform this experience into visual art, we employed text processing techniques such as sentiment
-          analysis (using an open source pretrained model from Huggingface), counted the number of capitalized words in the responses and many more.
-          Our inspiration also came from the
-          Rorschach test — a projective psychological test in which subjects' interpretations of inkblot images are
-          analyzed. Psychologists often use this test to delve into a person's personality and emotional state. We used
-          the Rorschach test as a conceptual framework for our artwork, combining it with algorithms to form the
-          base structure of our generative piece.
-
-          The artwork you see is a product of these ideas and analyses, and can be seen when you close this modal :)
         </p>
         <button id="close-modal-btn">Close</button>
       </div>
@@ -66,6 +73,7 @@
               <li><code>The question: "<span id="surveyQuestion"></span>"</code></li>
               <li><code>The answer: "<span id="textValue"></span>"</code></li>
               <li><code>The sentiment: <span id="sentimentValue"></span></code></li>
+              <li><code>The model's confidence: <span id="sentimentScore"></span></code></li>
               <li><code>The number of capital letters: <span id="capitalLettersCount"></span></code></li>
               <li><code>Characters: <span id="charsValue"></span></code></li>
               <li><code>Total number of words: <span id="totalWordsCount"></span></code></li>

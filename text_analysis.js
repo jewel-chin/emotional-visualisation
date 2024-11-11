@@ -75,7 +75,8 @@ window.results = [
             ":",
             ")"
         ],
-        7
+        7,
+        0.956799328327179
     ],
     [
         1,
@@ -102,7 +103,8 @@ window.results = [
             "i",
             "n"
         ],
-        4
+        4,
+        0.8723510503768921
     ],
     [
         1,
@@ -132,7 +134,8 @@ window.results = [
             "l",
             "y"
         ],
-        11
+        11,
+        0.7534402012825012
     ],
     [
         1,
@@ -149,7 +152,8 @@ window.results = [
             "d",
             "l"
         ],
-        3
+        3,
+        0.6261900067329407
     ],
     [
         1,
@@ -174,7 +178,8 @@ window.results = [
             "p",
             "y"
         ],
-        5
+        5,
+        0.5533818006515503
     ],
     [
         1,
@@ -212,7 +217,8 @@ window.results = [
             "E",
             "H"
         ],
-        13
+        13,
+        0.8243249654769897
     ],
     [
         1,
@@ -237,7 +243,8 @@ window.results = [
             "s",
             "e"
         ],
-        6
+        6,
+        0.7952595353126526
     ],
     [
         1,
@@ -263,7 +270,8 @@ window.results = [
             ":",
             "|"
         ],
-        6
+        6,
+        0.48846352100372314
     ],
     [
         1,
@@ -288,7 +296,8 @@ window.results = [
             "R",
             "."
         ],
-        5
+        5,
+        0.5156563520431519
     ],
     [
         1,
@@ -331,7 +340,8 @@ window.results = [
             "n",
             "d"
         ],
-        14
+        14,
+        0.9475293755531311
     ],
     [
         2,
@@ -343,7 +353,8 @@ window.results = [
             "o",
             "k"
         ],
-        1
+        1,
+        0.49493658542633057
     ],
     [
         2,
@@ -361,7 +372,8 @@ window.results = [
             "l",
             "e"
         ],
-        2
+        2,
+        0.6855199933052063
     ],
     [
         2,
@@ -376,7 +388,8 @@ window.results = [
             "e",
             "y"
         ],
-        1
+        1,
+        0.5429776310920715
     ],
     [
         2,
@@ -404,7 +417,8 @@ window.results = [
             "u",
             "z"
         ],
-        11
+        11,
+        0.8650673627853394
     ],
     [
         2,
@@ -423,7 +437,8 @@ window.results = [
             "u",
             "z"
         ],
-        3
+        3,
+        0.619857132434845
     ],
     [
         2,
@@ -440,7 +455,8 @@ window.results = [
             "u",
             "z"
         ],
-        2
+        2,
+        0.6987069249153137
     ],
     [
         2,
@@ -475,7 +491,8 @@ window.results = [
             "g",
             ")"
         ],
-        11
+        11,
+        0.9492655992507935
     ],
     [
         2,
@@ -493,7 +510,8 @@ window.results = [
             "U",
             "Z"
         ],
-        2
+        2,
+        0.6628841757774353
     ],
     [
         2,
@@ -509,7 +527,8 @@ window.results = [
             "e",
             "d"
         ],
-        1
+        1,
+        0.50847327709198
     ],
     [
         2,
@@ -543,10 +562,10 @@ window.results = [
             "B",
             "Y"
         ],
-        22
+        22,
+        0.8075659871101379
     ]
 ]
-
 // //////////////////////////////////////
 
 
@@ -570,33 +589,41 @@ window.onload = async function() {
     const introTextElement = document.getElementById('intro-text');
     const textContent = introTextElement.innerText; 
     introTextElement.innerHTML = '';
+    // separate by (next) first
+    const paragraphs = textContent.split("(NEXT)");
+    const chunkTextByWords = (text, chunkSize) => {
+        const words = text.split(' '); 
+        const chunks = [];
 
-  const chunkTextByWords = (text, chunkSize) => {
-    const words = text.split(' '); 
-    const chunks = [];
+        for (let i = 0; i < words.length; i += chunkSize) {
+        chunks.push(words.slice(i, i + chunkSize).join(' ')); 
+        }
+        return chunks;
+    };
 
-    for (let i = 0; i < words.length; i += chunkSize) {
-      chunks.push(words.slice(i, i + chunkSize).join(' ')); 
-    }
-    
-    return chunks;
-  };
 
-  const spanElement = document.createElement('span');
-  spanElement.innerText =  textContent.split('!')[0]+'!'; 
-  introTextElement.appendChild(spanElement);
-  introTextElement.appendChild(document.createElement('br'));
-
-  const chunks = chunkTextByWords(textContent.split('!')[1], 15);
-    chunks.forEach(chunk => {
-        const spanElement = document.createElement('span');
-        spanElement.innerText = chunk; 
-        introTextElement.appendChild(spanElement);
-        introTextElement.appendChild(document.createElement('br'));
-      });
+    paragraphs.forEach((paragraph,index)=>{
+        if(index===0){
+            const spanElement = document.createElement('span');
+            spanElement.innerText = paragraph;
+            introTextElement.appendChild(spanElement);
+            introTextElement.appendChild(document.createElement('br'));
+            return;
+        }
+        const emptyDiv =document.createElement('span');
+        emptyDiv.classList.add('space');
+        emptyDiv.innerHTML= ".....";
+        introTextElement.appendChild(emptyDiv);
+        const chunks = chunkTextByWords(paragraph, 15);
+        chunks.forEach(chunk => {
+            const spanElement = document.createElement('span');
+            spanElement.innerText = chunk; 
+            introTextElement.appendChild(spanElement);
+            introTextElement.appendChild(document.createElement('br'));
+          });
+    });
 
     const introTexts = document.querySelectorAll('#intro-text span');
-
 
     await initializePipeline();
     window.ready = true;
@@ -608,11 +635,17 @@ window.onload = async function() {
     introTexts.forEach((spanElement, index) => {
         if(index===0){
             setTimeout(() => {
+                if(spanElement.classList.contains('space')){
+                    return;
+                }
                 spanElement.classList.add('start');
             }, 0); 
         }
         else{
             setTimeout(() => {
+                if(spanElement.classList.contains('space')){
+                    return;
+                }
                 spanElement.classList.add('start');
             },  (index) + 3000); 
         }
@@ -673,7 +706,7 @@ async function run_model() {
     const model_output = await runSentimentAnalysis(text);
 
     sentiment = model_output[0].label;
-    score = model_output[0].score;
+    score = parseFloat(model_output[0].score.toPrecision(5));
     numberOfSwearWords = swearProcess(text);
     [numberOfCapitalLetters, numberOfFullCapitalisedWords, totalNumOfWords] = capsProcess(text);
     [charCountDict, punctuationDict, mostRepeatedCharacters, longestRepeatCounter] = repetitionProcess(text);
@@ -686,7 +719,8 @@ async function run_model() {
         sentiment,
         numberOfCapitalLetters,
         chars,
-        totalNumOfWords
+        totalNumOfWords,
+        score
     ];
     window.interactionResults = result;
     
@@ -713,7 +747,7 @@ async function runModelOnEachString(arrs) {
             // Sentiment Analysis
             const model_output = await runSentimentAnalysis(text);
             sentiment = model_output[0].label;
-            score = model_output[0].score;
+            score = parseFloat(model_output[0].score.toPrecision(5));
             numberOfSwearWords = swearProcess(text);
             [numberOfCapitalLetters, numberOfFullCapitalisedWords, totalNumOfWords] = capsProcess(text);
             [charCountDict, punctuationDict, mostRepeatedCharacters, longestRepeatCounter] = repetitionProcess(text);
@@ -728,7 +762,8 @@ async function runModelOnEachString(arrs) {
                 sentiment,
                 numberOfCapitalLetters,
                 chars,
-                totalNumOfWords
+                totalNumOfWords,
+                score
             ];
             window.results.push(result);
 

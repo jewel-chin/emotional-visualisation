@@ -59,7 +59,8 @@ document.addEventListener('modelReady', () => {
     numberOfCapitalLetters = i[4];
     sentiment = i[3];
     totalNumOfWords = i[6];
-    updateList(currentSet, survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+    score = i[7];
+    updateList(currentSet, survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords,score);
     drawShape();
     drawShapeWithRotation();
   }
@@ -75,7 +76,9 @@ document.addEventListener('interactionReady', () => {
     numberOfCapitalLetters = i[3];
     sentiment = i[2];
     totalNumOfWords = i[5];
-    updateList("0",survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+    score = i[6];
+
+    updateList("0",survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords, score);
     drawShape();
   }
 });
@@ -213,19 +216,20 @@ function generatePattern() {
 }
 
 
-function updateNoiseLevels(sentiment) {
+function updateNoiseLevels(sentiment, score) {
   switch (sentiment) {
     case 'positive':
       noiseLevelX = 0.05;
       noiseLevelY = 0.05;
 
-      r1 = 255;      
-      g1 = 13;        
-      b1 = 2;        
+      r1 = round(255 * score);     
+      console.log(r1); 
+      g1 = round(13 * score);        
+      b1 = round(2 * score);        
 
-      r2 = 253;    
-      g2 = 233;      
-      b2 = 38;        
+      r2 = round(253 * score);    
+      g2 = round(233 * score);      
+      b2 = round(38 * score);        
       break;
 
     case 'neutral':
@@ -364,7 +368,7 @@ function shuffle2DArray(array) {
 function keyPressed() {
   if (keyIsDown(32)) { // space
     clearAllTimeouts();
-    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A");
+    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A","N.A");
     drawShape();
   } 
 
@@ -382,7 +386,9 @@ function keyPressed() {
     numberOfCapitalLetters = i[4];
     sentiment = i[3];
     totalNumOfWords = i[6];
-    updateList(currentSet, survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
+    score = i[7];
+
+    updateList(currentSet, survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords,score);    
     drawShapeWithRotation();
   } 
 }
@@ -432,7 +438,7 @@ function drawShape() {
   noiseOffsetX = random(1000);
   noiseOffsetY = random(1000);
 
-  updateNoiseLevels(sentiment); 
+  updateNoiseLevels(sentiment,score); 
   updateInkThreshold(totalNumOfWords || 0);
   updateResolutionBasedOnCapitalizedWords(numberOfCapitalLetters || 0);
   generatePattern();
@@ -456,7 +462,8 @@ function drawShapeWithRotation() {
       numberOfCapitalLetters = i[4];
       sentiment = i[3];
       totalNumOfWords = i[6];
-  
+      score = i[7];
+
       clearShape();
       drawingTimers.push(setTimeout(()=>{
         for (var i = 0; i < timers.length; i++)
@@ -464,20 +471,20 @@ function drawShapeWithRotation() {
               clearTimeout(timers[i]);
         }
         drawShapeWithRotation();
-        updateList(currentSet,survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);
+        updateList(currentSet,survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords,score);
   
       },1000));
     },4000));
   }
   else{
-    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A");
+    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A","N.A");
   }
 
 
   
 }
 
-function updateList(currentSet,survey_question, text,sentiment,numberOfCapitalLetters,chars,totalNumOfWords) {
+function updateList(currentSet,survey_question, text,sentiment,numberOfCapitalLetters,chars,totalNumOfWords,score) {
   document.getElementById("CurrentSet").textContent = ' #'+currentSet+")";
   document.getElementById("surveyQuestion").textContent = survey_question; 
   document.getElementById("textValue").textContent = text; 
@@ -485,6 +492,7 @@ function updateList(currentSet,survey_question, text,sentiment,numberOfCapitalLe
   document.getElementById("capitalLettersCount").textContent = numberOfCapitalLetters; 
   document.getElementById("charsValue").textContent = chars; 
   document.getElementById("totalWordsCount").textContent = totalNumOfWords; 
+  document.getElementById("sentimentScore").textContent = parseFloat(score.toPrecision(4));
 }
 
 
@@ -511,7 +519,7 @@ function toggleTextField() {
     console.log('toggled');
     interaction = true;
     clearAllTimeouts();
-    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A");
+    updateList("0","N.A", "N.A", "N.A", "N.A","N.A", "N.A","N.A");
 
   } else {
     textField.style.display = 'none'; 
@@ -527,7 +535,9 @@ function toggleTextField() {
     numberOfCapitalLetters = i[4];
     sentiment = i[3];
     totalNumOfWords = i[6];
-    updateList(currentSet,survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords);    
+    score = i[7];
+
+    updateList(currentSet,survey_question, survey_string, sentiment, numberOfCapitalLetters, chars, totalNumOfWords,score);    
     drawShapeWithRotation();
   }
 }
